@@ -1,7 +1,5 @@
 ## Ecological Remote Sensing with `R` and `Google Earth Engine`
 *Thiago Sanna Freire Silva - Department of Geography - São Paulo State University (UNESP), Rio Claro .* 
-[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
-
 
 Welcome to the source page for our one-day workshop on Ecological Remote Sensing! This repository will contain all course material. 
 
@@ -25,4 +23,4 @@ This course assumes basic familiarity with the `R` programming language (reading
 
 That's it, you're good to go!
 
- 
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
