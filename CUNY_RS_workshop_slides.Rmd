@@ -1,0 +1,156 @@
+---
+title: "Ecological Remote Sensing with R and Google Earth Engine"
+subtitle: "One-day workshop - CUNY"
+author: "Thiago Sanna Freire Silva"
+date: "`r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: center, middle
+
+# So...why are you here?
+
+
+
+---
+class: inverse, center, middle
+
+# Remote sensing basics
+
+---
+
+---
+class: inverse, center, middle
+background-image: url("https://i.imgflip.com/17j2vf.jpg")
+
+# Google Earth Engine: unlimited power!
+
+---
+# Google Earth Engine
+
+ Online remote platform hosted by Google
+ 
+ Hundreds of global datasets, including major remote sensing archives such as Landsat, MODIS, Sentinel, etc.
+ 
+ Other geospatial data such as SRTM, WorldCLim/Bioclim, and several other datsets
+
+--
+
+Also, huge cloud processing power - continent-wide analyses take minutes!
+
+All for free! (yeah, right.)
+
+--
+
+Has Python and JavaScript APIs, but **if you want to work interactively, you need to use the online JavaScript [Code Editor](https://code.earthengine.google.com/)**
+---
+# GEE Datasets
+
+To find out wich datasets are available on GEE, use the dedicated Data Explorer on https://explorer.earthengine.google.com/#index.
+
+You can switch between `Catalog` and `Workspace` on the top right.
+
+Or, use the search bar on the [Code Editor](https://code.earthengine.google.com/).
+
+
+
+---
+# Basic Google Earth Elements
+
+*Image*: a single image element. Type the code below and hit `Run` on the UI to run the code:
+
+```{js eval=F}
+// Load a single image from the new JAXA AW3D30
+//  digital elevation model
+var aw3d30 = ee.Image('JAXA/ALOS/AW3D30_V1_1')
+Map.addLayer(aw3d30)
+```
+**Don't forget to save your code often - there is no autosave!**
+
+--
+
+On GEE, we bring in data by passing a dataset ID to a constructor. In this case, we used an `image` constructor.
+
+---
+# Basic Google Earth Elements
+
+Doesn't look very great - GEE defaults to the maximum range of the data type. But `addLayer` takes a `visParams` parameter where we can manipulate things.
+
+`visParams` takes an object with named elements:
+
+```{js eval=F}
+Map.addLayer(aw3d30,{min: 0, max: 2000})
+```
+
+--
+
+By the way, did you notice we just loaded a 30m spatial resolution DEM for the entire globe in a few seconds? 
+
+
+```{r echo=FALSE, out.width='30%',fig.align='center'}
+knitr::include_graphics('https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif')
+```
+---
+# What's in an image?
+
+We can use `print` on GEE to inspect an object:
+
+```{js}
+print('How the sausage is made:', aw3d30)
+```
+
+Image bands are named, and there is plenty of metadata acessible too.
+
+-- 
+
+We can use band names as inputs to a select method:
+
+```{js}
+Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
+
+Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
+```
+---
+# Basic Google Earth Elements
+
+Several datasets are comprised of several images. These datasets can be read as `collections`.
+
+If we take the Landsat 5 historical record, for example:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+print(L5)
+```
+What happened?
+---
+
+## Can you tell me all that's going on here?
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+//print(L5)
+
+var image = ee.Image(L5.first())
+
+print('What art thou?', image)
+
+var vizParams = {
+  bands: ['B5', 'B4', 'B3'],
+  min: 0,
+  max: 10000,
+}
+
+Map.addLayer(image, vizParams, 'First!')
+
+Map.centerObject(image, 6)
+
+```
+

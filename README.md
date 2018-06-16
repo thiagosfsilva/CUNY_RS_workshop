@@ -13,15 +13,19 @@ To get set up for the course, please follow the steps below:
 
 - Sign-up with a Google account. I'm not sure what the waiting time is at the moment, so I suggest you do it **ASAP**.
 
+- You will need a Google Drive associated with your login, to export data.
+
+- Feel free to browse through the [GEE Tutorial](https://developers.google.com/earth-engine/tutorial_js_01) if you wish. I suggest checking at least the basic [JavaScript Intro](https://developers.google.com/earth-engine/tutorial_js_01). Especially if you're used to another programming language, JS can be a bit mind boggling (at least it is for me!). The [Mozilla JS tutorial](https://developer.mozilla.org/en-US/docs/Web/JavaScript) is good too, if you need a more complete tutorial. 
+
   
 
-##### 2) Make sure you have the latest version of R (3.5) and RStudio
+##### 2) Make sure you have the latest version of R (3.5) and RStudio.
 
-This course assumes basic familiarity with the `R` programming language (reading data in, manipulating data, working with `data.frames`, basic use of functions for analysis and plotting). 
+This course assumes basic familiarity with the `R` programming language (reading data in, manipulating data, working with `data.frames`, plotting), and with programming concepts in general (variables, functions, loops) .
 
 
 
-#####3) Install the `R` packages `raster`,`rgdal`,`sp`,`caret`,`ggplot2`
+#####3) Install the `R` packages `raster`,`rgdal`,`sp`,`caret`,`ggplot2`.
 
 That's it, you're good to go!
 

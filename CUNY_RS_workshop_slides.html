@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ecological Remote Sensing with R and Google Earth Engine</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Thiago Sanna Freire Silva" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ecological Remote Sensing with R and Google Earth Engine
+## One-day workshop - CUNY
+### Thiago Sanna Freire Silva
+### 2018-06-16)
+
+---
+
+class: center, middle
+
+# So...why are you here?
+
+
+
+---
+class: inverse, center, middle
+
+# Remote sensing basics
+
+---
+
+---
+class: inverse, center, middle
+background-image: url("https://i.imgflip.com/17j2vf.jpg")
+
+# Google Earth Engine: unlimited power!
+
+---
+# Google Earth Engine
+
+ Online remote platform hosted by Google
+ 
+ Hundreds of global datasets, including major remote sensing archives such as Landsat, MODIS, Sentinel, etc.
+ 
+ Other geospatial data such as SRTM, WorldCLim/Bioclim, and several other datsets
+
+--
+
+Also, huge cloud processing power - continent-wide analyses take minutes!
+
+All for free! (yeah, right.)
+
+--
+
+Has Python and JavaScript APIs, but **if you want to work interactively, you need to use the online JavaScript [Code Editor](https://code.earthengine.google.com/)**
+---
+# GEE Datasets
+
+To find out wich datasets are available on GEE, use the dedicated Data Explorer on https://explorer.earthengine.google.com/#index.
+
+You can switch between `Catalog` and `Workspace` on the top right.
+
+Or, use the search bar on the [Code Editor](https://code.earthengine.google.com/).
+
+
+
+---
+# Basic Google Earth Elements
+
+*Image*: a single image element. Type the code below and hit `Run` on the UI to run the code:
+
+
+```js
+// Load a single image from the new JAXA AW3D30
+//  digital elevation model
+var aw3d30 = ee.Image('JAXA/ALOS/AW3D30_V1_1')
+Map.addLayer(aw3d30)
+```
+**Don't forget to save your code often - there is no autosave!**
+
+--
+
+On GEE, we bring in data by passing a dataset ID to a constructor. In this case, we used an `image` constructor.
+
+---
+# Basic Google Earth Elements
+
+Doesn't look very great - GEE defaults to the maximum range of the data type. But `addLayer` takes a `visParams` parameter where we can manipulate things.
+
+`visParams` takes an object with named elements:
+
+
+```js
+Map.addLayer(aw3d30,{min: 0, max: 2000})
+```
+
+--
+
+By the way, did you notice we just loaded a 30m spatial resolution DEM for the entire globe in a few seconds? 
+
+
+&lt;img src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" width="30%" style="display: block; margin: auto;" /&gt;
+---
+# What's in an image?
+
+We can use `print` on GEE to inspect an object:
+
+
+```js
+print('How the sausage is made:', aw3d30)
+```
+
+
+&lt;script type="text/javascript"&gt;
+print('How the sausage is made:', aw3d30)
+&lt;/script&gt;
+
+Image bands are named, and there is plenty of metadata acessible too.
+
+-- 
+
+We can use band names as inputs to a select method:
+
+
+```js
+Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
+
+Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
+```
+
+
+&lt;script type="text/javascript"&gt;
+Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
+
+Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
+&lt;/script&gt;
+---
+# Basic Google Earth Elements
+
+Several datasets are comprised of several images. These datasets can be read as `collections`.
+
+If we take the Landsat 5 historical record, for example:
+
+
+```js
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+print(L5)
+```
+
+
+&lt;script type="text/javascript"&gt;
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+print(L5)
+&lt;/script&gt;
+What happened?
+---
+
+## Can you tell me all that's going on here?
+
+
+```js
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+//print(L5)
+
+var image = ee.Image(L5.first())
+
+print('What art thou?', image)
+
+var vizParams = {
+  bands: ['B5', 'B4', 'B3'],
+  min: 0,
+  max: 10000,
+}
+
+Map.addLayer(image, vizParams, 'First!')
+
+Map.centerObject(image, 6)
+
+```
+
+
+&lt;script type="text/javascript"&gt;
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+//print(L5)
+
+var image = ee.Image(L5.first())
+
+print('What art thou?', image)
+
+var vizParams = {
+  bands: ['B5', 'B4', 'B3'],
+  min: 0,
+  max: 10000,
+}
+
+Map.addLayer(image, vizParams, 'First!')
+
+Map.centerObject(image, 6)
+
+&lt;/script&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
