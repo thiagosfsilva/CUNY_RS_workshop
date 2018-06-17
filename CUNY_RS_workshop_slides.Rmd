@@ -16,8 +16,10 @@ class: center, middle
 
 # So...why are you here?
 
-
-
+```{r setup,include=FALSE,cache=FALSE}
+library(knitr)
+opts_chunk$set(eval=F)
+```
 ---
 class: inverse, center, middle
 
@@ -65,7 +67,7 @@ Or, use the search bar on the [Code Editor](https://code.earthengine.google.com/
 
 *Image*: a single image element. Type the code below and hit `Run` on the UI to run the code:
 
-```{js eval=F}
+```{js}
 // Load a single image from the new JAXA AW3D30
 //  digital elevation model
 var aw3d30 = ee.Image('JAXA/ALOS/AW3D30_V1_1')
@@ -84,7 +86,7 @@ Doesn't look very great - GEE defaults to the maximum range of the data type. Bu
 
 `visParams` takes an object with named elements:
 
-```{js eval=F}
+```{js}
 Map.addLayer(aw3d30,{min: 0, max: 2000})
 ```
 
@@ -129,6 +131,15 @@ var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
 print(L5)
 ```
 What happened?
+
+--
+
+```{js}
+var count = L5.size()
+print('Count: ', count)
+```
+
+
 ---
 
 ## Can you tell me all that's going on here?
@@ -153,4 +164,40 @@ Map.addLayer(image, vizParams, 'First!')
 Map.centerObject(image, 6)
 
 ```
+---
+# Metadata
 
+There are several functions to access image metadata:
+
+```{js}
+// Get information about the bands as a list.
+var bandNames = image.bandNames()
+print('Band names: ', bandNames) // ee.List of band names
+
+// Get projection information from band 1.
+var b1proj = image.select('B1').projection()
+print('Band 1 projection: ', b1proj) // ee.Projection object
+
+// Get scale (resolution, in meters) information from band 1.
+var b1scale = image.select('B1').projection().nominalScale()
+print('Band 1 resolution: ', b1scale) // ee.Number
+
+// Get a list of all metadata properties.
+var properties = image.propertyNames()
+print('Metadata properties: ', properties) 
+
+// Get a specific metadata property.
+var cloudiness = image.get('CLOUD_COVER')
+print('CLOUD_COVER: ', cloudiness) 
+```
+---
+# Useful Code Editor tools
+
+Although very limited, the Code Editor offers some useful tools:
+
+- 
+
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering:

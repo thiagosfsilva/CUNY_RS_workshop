@@ -4,8 +4,8 @@
     <title>Ecological Remote Sensing with R and Google Earth Engine</title>
     <meta charset="utf-8">
     <meta name="author" content="Thiago Sanna Freire Silva" />
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -14,14 +14,13 @@ class: center, middle, inverse, title-slide
 # Ecological Remote Sensing with R and Google Earth Engine
 ## One-day workshop - CUNY
 ### Thiago Sanna Freire Silva
-### 2018-06-16)
+### 2018-06-17)
 
 ---
 
 class: center, middle
 
 # So...why are you here?
-
 
 
 ---
@@ -101,7 +100,7 @@ Map.addLayer(aw3d30,{min: 0, max: 2000})
 By the way, did you notice we just loaded a 30m spatial resolution DEM for the entire globe in a few seconds? 
 
 
-&lt;img src="https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" width="30%" style="display: block; margin: auto;" /&gt;
+
 ---
 # What's in an image?
 
@@ -111,11 +110,6 @@ We can use `print` on GEE to inspect an object:
 ```js
 print('How the sausage is made:', aw3d30)
 ```
-
-
-&lt;script type="text/javascript"&gt;
-print('How the sausage is made:', aw3d30)
-&lt;/script&gt;
 
 Image bands are named, and there is plenty of metadata acessible too.
 
@@ -129,13 +123,6 @@ Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
 
 Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
 ```
-
-
-&lt;script type="text/javascript"&gt;
-Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
-
-Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
-&lt;/script&gt;
 ---
 # Basic Google Earth Elements
 
@@ -149,14 +136,17 @@ var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
 
 print(L5)
 ```
-
-
-&lt;script type="text/javascript"&gt;
-var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
-
-print(L5)
-&lt;/script&gt;
 What happened?
+
+--
+
+
+```js
+var count = L5.size()
+print('Count: ', count)
+```
+
+
 ---
 
 ## Can you tell me all that's going on here?
@@ -182,28 +172,44 @@ Map.addLayer(image, vizParams, 'First!')
 Map.centerObject(image, 6)
 
 ```
+---
+# Metadata
+
+There are several functions to access image metadata:
 
 
-&lt;script type="text/javascript"&gt;
-var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+```js
+// Get information about the bands as a list.
+var bandNames = image.bandNames()
+print('Band names: ', bandNames) // ee.List of band names
 
-//print(L5)
+// Get projection information from band 1.
+var b1proj = image.select('B1').projection()
+print('Band 1 projection: ', b1proj) // ee.Projection object
 
-var image = ee.Image(L5.first())
+// Get scale (resolution, in meters) information from band 1.
+var b1scale = image.select('B1').projection().nominalScale()
+print('Band 1 resolution: ', b1scale) // ee.Number
 
-print('What art thou?', image)
+// Get a list of all metadata properties.
+var properties = image.propertyNames()
+print('Metadata properties: ', properties) 
 
-var vizParams = {
-  bands: ['B5', 'B4', 'B3'],
-  min: 0,
-  max: 10000,
-}
+// Get a specific metadata property.
+var cloudiness = image.get('CLOUD_COVER')
+print('CLOUD_COVER: ', cloudiness) 
+```
+---
+# Useful Code Editor tools
 
-Map.addLayer(image, vizParams, 'First!')
+Although very limited, the Code Editor offers some useful tools:
 
-Map.centerObject(image, 6)
+- 
 
-&lt;/script&gt;
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering:
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

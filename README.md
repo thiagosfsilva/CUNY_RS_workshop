@@ -27,4 +27,24 @@ This course assumes basic familiarity with the `R` programming language (reading
 
 That's it, you're good to go!
 
+### Tentative Schedule
+
+- 09:00 am - Meet and greet
+ 
+- 09:30 am - Remote sensing basics
+ 
+- 10:30 am - Remote sensing products of interest
+
+- 11:30 am - Getting stared with GEE (hands-on)
+
+- 12:00 am - LUNCH
+
+- 01:00 pm - Working with Collections in GEE (hands-on)
+ 
+- 02:00 pm - Creating and exporting image composites (hands-on)
+ 
+- 03:00 pm - Remote sensing analysis in R (hands-on)
+ 
+- 05:00 pm - Wrap-up
+
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
