@@ -1,0 +1,388 @@
+---
+title: "Ecological Remote Sensing with R and Google Earth Engine"
+subtitle: "One-day workshop - CUNY"
+author: "Thiago Sanna Freire Silva"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+#    css: ["default", "fonts.css"]  
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+#    self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+---
+class: center, middle
+
+# So...why are you here?
+
+```{r setup,include=FALSE,cache=FALSE}
+library(knitr)
+opts_chunk$set(eval=F)
+```
+---
+class: inverse, center, middle
+
+# Remote sensing basics
+
+---
+class: inverse, center, middle
+background-image: url("https://i.imgflip.com/17j2vf.jpg")
+
+# Google Earth Engine: unlimited power!
+
+---
+# Google Earth Engine
+
+ Online remote platform hosted by Google
+ 
+ Hundreds of global datasets, including major remote sensing archives such as Landsat, MODIS, Sentinel, etc.
+ 
+ Other geospatial data such as SRTM, WorldCLim/Bioclim, and several other datsets
+
+--
+
+Also, huge cloud processing power - continent-wide analyses take minutes!
+
+All for free! (yeah, right.)
+
+--
+
+Has Python and JavaScript APIs, but **if you want to work interactively, you need to use the online JavaScript [Code Editor](https://code.earthengine.google.com/)**
+---
+# GEE Datasets
+
+To find out wich datasets are available on GEE, use the dedicated Data Explorer on https://explorer.earthengine.google.com/#index.
+
+You can switch between `Catalog` and `Workspace` on the top right.
+
+Or, use the search bar on the [Code Editor](https://code.earthengine.google.com/).
+
+Although very limited, the Code Editor offers some useful tools:
+
+- Code repository with several examples
+- Function documentation
+- Dataset search
+- Manual digitizing
+- Map inspector
+
+
+---
+# GEE data structures
+
+*Image*: a single image element. Type the code below and hit `Run` on the UI to run the code:
+
+```{js}
+// Load a single image from the new JAXA AW3D30
+//  digital elevation model
+var aw3d30 = ee.Image('JAXA/ALOS/AW3D30_V1_1')
+Map.addLayer(aw3d30)
+```
+**Don't forget to save your code often - there is no autosave!**
+
+--
+
+On GEE, we bring in data by passing a dataset ID to a constructor. In this case, we used an `image` constructor.
+
+---
+# GEE data structures
+
+Doesn't look very great - GEE defaults to the maximum range of the data type. But `addLayer` takes a `visParams` parameter where we can manipulate things.
+
+`visParams` takes an object with named elements:
+
+```{js}
+Map.addLayer(aw3d30,{min: 0, max: 2000})
+```
+
+--
+
+By the way, did you notice we just loaded a 30m spatial resolution DEM for the entire globe in a few seconds? 
+
+
+```{r eval=T, echo=FALSE, out.width='30%',fig.align='center'}
+knitr::include_graphics('https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif')
+```
+---
+# What's in an image?
+
+We can use `print` on GEE to inspect an object:
+
+```{js}
+print('How the sausage is made:', aw3d30)
+```
+
+Image bands are named, and there is plenty of metadata acessible too.
+
+-- 
+
+We can use band names as inputs to a select method:
+
+```{js}
+Map.addLayer(aw3d30.select('AVE'), {min: 0, max: 2000}, 'AVE')
+
+Map.addLayer(aw3d30.select('MED'), {min: 0, max: 2000}, 'MED')
+```
+---
+# GEE data structures
+
+*Image*: a single image element. 
+
+*Collection*: A dataset comprised of several images. Let's use the Landsat 5 historical record, for example:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+print(L5)
+```
+What happened?
+
+--
+
+```{js}
+var count = L5.size()
+print('Count: ', count)
+```
+
+---
+
+## Can you tell me all that's going on here?
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+
+//print(L5)
+
+var image = ee.Image(L5.first())
+
+print('What art thou?', image)
+
+var vizParams = {
+  bands: ['B5', 'B4', 'B3'],
+  min: 0,
+  max: 10000,
+}
+
+Map.addLayer(image, vizParams, 'First!')
+
+Map.centerObject(image, 6)
+
+```
+---
+# Metadata
+
+There are several functions to access image metadata:
+
+```{js}
+// Get information about the bands as a list.
+var bandNames = image.bandNames()
+print('Band names: ', bandNames) // ee.List of band names
+
+// Get projection information from band 1.
+var b1proj = image.select('B1').projection()
+print('Band 1 projection: ', b1proj) // ee.Projection object
+
+// Get scale (resolution, in meters) information from band 1.
+var b1scale = image.select('B1').projection().nominalScale()
+print('Band 1 resolution: ', b1scale) // ee.Number
+
+// Get a list of all metadata properties.
+var properties = image.propertyNames()
+print('Metadata properties: ', properties) 
+
+// Get a specific metadata property.
+var cloudiness = image.get('CLOUD_COVER')
+print('CLOUD_COVER: ', cloudiness) 
+```
+
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering. There are dozens of filter functions in GEE:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ROI) #<<
+
+var count = L5.size()
+print('Count: ', count)
+```
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering. There are dozens of filter functions in GEE:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ROI) 
+    .filterDate('2010-01-01','2010-12-31') #<<
+
+var count = L5.size()
+print('Count: ', count)
+```
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering. There are dozens of filter functions in GEE:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ROI) 
+    .filterDate('2010-01-01','2010-12-31')
+    .filterMetadata('CLOUD_COVER_LAND','less_than',10) #<<
+
+var count = L5.size()
+print('Count: ', count)
+
+```
+---
+# Working with collections 
+
+The first thing you'll want do with a `Collection` is filtering. There are dozens of filter functions in GEE:
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ROI) 
+    .filterDate('2010-01-01','2010-12-31')
+    .filterMetadata('CLOUD_COVER_LAND','less_than',10)
+    .filter(ee.Filter.calendarRange(135,196,'day_of_year')) #<<
+
+var count = L5.size()
+print('Count: ', count)
+
+var image = ee.Image(L5.first())
+
+print('Image metadata', image)
+
+```
+---
+# What can I do with collections?
+
+*Map*: apply a function to every image in a collection.
+
+*Reduce*: combine all images in a collection through a pixel-wise function.
+
+*Iterate*: sequentially apply a function to a collection (useful for recursion, such as a cumulative function).
+
+```{js}
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ROI) 
+    .filterDate('2010-01-01','2010-12-31')
+    .filterMetadata('CLOUD_COVER_LAND','less_than',10)
+    .filter(ee.Filter.calendarRange(135,196,'day_of_year'))
+
+var calcNDVI = function(image) {
+  return image.normalizedDifference(['B4', 'B3'])
+} 
+
+var ndvi = L5.map(calcNDVI) #<<
+
+print(ndvi, "NDVI Collection")
+```
+---
+# What can I do with collections?
+
+Mapping is also useful to apply masks:
+
+```{js}
+var getQABits = function(image, start, end, newName) {
+    var pattern = 0;
+    for (var i = start; i <= end; i++) {pattern += Math.pow(2, i)}
+    return image.select([0], [newName])
+                  .bitwiseAnd(pattern)
+                  .rightShift(start)
+}
+
+var mask_clouds = function(image) {
+  var QA = image.select(['pixel_qa'])
+  var shadow = getQABits(QA, 3,3, 'Cloud_shadows').eq(0);
+  image = image.updateMask(shadow)
+  var clouds = getQABits(QA, 5,5, 'Cloud').eq(0);
+  image = image.updateMask(clouds)
+  return image
+}
+
+var cmasked = L5.map(mask_clouds)
+var masked = ee.Image(cmasked.first())
+Map.addLayer(masked, vizParams, 'Masked')
+```
+---
+
+# What can I do with collections?
+
+*Reducing*: combining images.
+
+```{js}
+var reduced = cmasked.reduce(ee.Reducer.median())
+
+Map.addLayer(reduced,{
+  bands: ['B5_median', 'B4_median', 'B3_median'],
+  min: [200, 200, 200],
+  max: [3200, 3500, 2500]}
+, 'Masked')
+
+Map.centerObject(ROI, 15)
+```
+---
+# Exercise 1: putting it all together
+
+1 - Digitize a region of interest
+
+2 - Load the Landsat 5 collection 
+
+3 - Filter it by ROI, time period and seasonal period
+
+4 - Show the first image on the Map, with a R5G4B3 color composition
+
+5 - Apply the cloud mask to the collection
+
+6 - Display the first masked image
+
+7 - Make a Landsat composite using a median reducer
+
+8 - Display the composite image
+
+9 - Calculate NDVI from the composite image
+---
+# Exporting data from GEE
+
+Let's generate a couple of composite images to massage in R later:
+
+```{js}
+var L8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')
+    .filterBounds(ROI) 
+    .filterDate('2014-01-01','2017-12-31')
+    
+var L8_wet = L8.filter(ee.Filter.calendarRange(1,90,'day_of_year'))
+var L8_dry = L8.filter(ee.Filter.calendarRange(152,243,'day_of_year'))
+
+var L8_wet_comp = L8_wet.map(mask_clouds).median().clip(ROI)
+var L8_dry_comp = L8_dry.map(mask_clouds).median().clip(ROI)
+
+var vizParam = {bands: ['B6', 'B5', 'B4'], min: [200, 200, 200], max: [3200, 3500, 2500]}
+
+Map.addLayer(L8_wet_comp, vizParam, 'L5 Wet Season Composite')
+Map.addLayer(L8_dry_comp, vizParam, 'L5 Dry Season Composite')
+```
+---
+# Exporting data from GEE
+
+By default, GEE exports results to the user's Google Drive account:
+
+```{js}
+Export.image.toDrive({
+  image: L8_wet_comp,
+  description: 'L8_wet_season_20145-2017',
+  scale: 30
+})
+
+Export.image.toDrive({
+  image: L8_dry_comp,
+  description: 'L8_dry_season_2014-2017',
+  scale: 30
+})
+```
+
