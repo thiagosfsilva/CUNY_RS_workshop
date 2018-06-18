@@ -6,7 +6,7 @@ date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
 #    css: ["default", "fonts.css"]  
-    chakra: libs/remark-latest.min.js
+#    chakra: libs/remark-latest.min.js
     lib_dir: libs
 #    self_contained: true
     nature:
