@@ -1,3 +1,7 @@
 TO DO:
 
 Change GEE export script to export only spectral bands.
+
+iButton exercise: use thermal data + terrain descriptors + max ndvi + ndvi seasonality
+
+get thermal data as Landsat brightness temperature for 2009 - 2011
