@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="author" content="Thiago Sanna Freire Silva" />
     <meta name="date" content="2018-06-18" />
-    <link href="CUNY_RS_workshop_slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="CUNY_RS_workshop_slides_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -427,8 +427,134 @@ On the top left portion of the Code Editor, do:
 - Select the shapefile of interest and all accessory files (`.dbf`,`.prj`,`.shx`)
 
 - Check the task progress on the `Tasks` tab
+
+- Once it is done, click om `Import into script`
+
+- Rename the variable to `iButton`
+---
+# Combining images and features
+
+In this exam pleLet extract MODIS temperature data for iButton locations.
+
+First, lets prepare our temperature collection:
+
+
+```js
+var MOD
+
+```
+---
+class: inverse,center,middle
+
+# RRRemote Sensing
+
+---
+# Why do remote sensing in `R`?
+
+Seamless transition into data alaysis
+
+Capable libraries for handling raster and vector data
+
+Possibility of automated plotting
+
+# Why not do remote sensing in `R`?
+
+Slooooooow
+
+**My current workflow: pre-process in `GEE` or `GDAL/Python`, analyze in `R`.**
+---
+# Reading data in:
+
+The `raster` library can handle most of the data I/O, using `rgdal` as a backend.
+
+
+```r
+library(raster)
+```
+
+```
+## Loading required package: sp
+```
+
+```r
+L8_dry &lt;- brick('~/Projects/CUNY_RS_workshop/L8_imgs/L8_dry_season_2005-2010.tif')
+
+L8_dry
+```
+
+```
+## class       : RasterBrick 
+## dimensions  : 307, 1224, 375768, 12  (nrow, ncol, ncell, nlayers)
+## resolution  : 0.0002694946, 0.0002694946  (x, y)
+## extent      : -48.02582, -47.69596, -22.28855, -22.20581  (xmin, xmax, ymin, ymax)
+## coord. ref. : +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0 
+## data source : /home/thiago/Projects/CUNY_RS_workshop/L8_imgs/L8_dry_season_2005-2010.tif 
+## names       : L8_dry_season_2005.2010.1, L8_dry_season_2005.2010.2, L8_dry_season_2005.2010.3, L8_dry_season_2005.2010.4, L8_dry_season_2005.2010.5, L8_dry_season_2005.2010.6, L8_dry_season_2005.2010.7, L8_dry_season_2005.2010.8, L8_dry_season_2005.2010.9, L8_dry_season_2005.2010.10, L8_dry_season_2005.2010.11, L8_dry_season_2005.2010.12
+```
+---
+
+```r
+summary(L8_dry)
+```
+
+```
+## Warning in .local(object, ...): summary is an estimate based on a sample of 1e+05 cells (26.61% of all cells)
+```
+
+```
+##         L8_dry_season_2005.2010.1 L8_dry_season_2005.2010.2
+## Min.                        -14.5                      46.5
+## 1st Qu.                      90.0                     144.0
+## Median                      163.0                     225.0
+## 3rd Qu.                     259.0                     335.0
+## Max.                       1482.0                    1808.0
+## NA's                     191078.0                  191078.0
+##         L8_dry_season_2005.2010.3 L8_dry_season_2005.2010.4
+## Min.                       74.500                        48
+## 1st Qu.                   295.375                       237
+## Median                    413.500                       400
+## 3rd Qu.                   575.000                       642
+## Max.                     2502.000                      3156
+## NA's                   191078.000                    191078
+##         L8_dry_season_2005.2010.5 L8_dry_season_2005.2010.6
+## Min.                        111.0                        35
+## 1st Qu.                    2027.0                      1129
+## Median                     2338.5                      1532
+## 3rd Qu.                    2802.5                      2151
+## Max.                       4357.5                      5657
+## NA's                     191078.0                    191078
+##         L8_dry_season_2005.2010.7 L8_dry_season_2005.2010.8
+## Min.                       22.000                    2905.0
+## 1st Qu.                   468.500                    2928.5
+## Median                    801.000                    2935.0
+## 3rd Qu.                  1306.625                    2946.0
+## Max.                     6393.000                    2998.5
+## NA's                   191078.000                  191078.0
+##         L8_dry_season_2005.2010.9 L8_dry_season_2005.2010.10
+## Min.                       2889.0                         66
+## 1st Qu.                    2913.0                         96
+## Median                     2921.5                         96
+## 3rd Qu.                    2931.0                         96
+## Max.                       2974.0                        224
+## NA's                     191078.0                     191078
+##         L8_dry_season_2005.2010.11 L8_dry_season_2005.2010.12
+## Min.                           322                          0
+## 1st Qu.                        322                          0
+## Median                         322                          0
+## 3rd Qu.                        322                          0
+## Max.                           324                          0
+## NA's                        191078                     191078
+```
+---
+
+```r
+plotRGB(L8_dry,r=6,g=5,b=4, scale=10000)
+```
+
+&lt;img src="CUNY_RS_workshop_slides_files/figure-html/unnamed-chunk-22-1.png" width="\textwidth" /&gt;
+---
     </textarea>
-<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,

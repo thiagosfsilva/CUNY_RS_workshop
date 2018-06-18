@@ -6,8 +6,8 @@ date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
 #    css: ["default", "fonts.css"]  
-#    chakra: libs/remark-latest.min.js
-#    lib_dir: /libs
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
 #    self_contained: true
     nature:
       highlightStyle: github
@@ -426,4 +426,45 @@ First, lets prepare our temperature collection:
 var MOD
 
 ```
+---
+class: inverse,center,middle
+
+# RRRemote Sensing
+
+---
+# Why do remote sensing in `R`?
+
+Seamless transition into data alaysis
+
+Capable libraries for handling raster and vector data
+
+Possibility of automated plotting
+
+# Why not do remote sensing in `R`?
+
+Slooooooow
+
+**My current workflow: pre-process in `GEE` or `GDAL/Python`, analyze in `R`.**
+---
+# Reading data in:
+
+The `raster` library can handle most of the data I/O, using `rgdal` as a backend.
+
+```{r eval=T}
+library(raster)
+
+L8_dry <- brick('~/Projects/CUNY_RS_workshop/L8_imgs/L8_dry_season_2005-2010.tif')
+
+L8_dry
+```
+---
+```{r eval=T}
+summary(L8_dry)
+
+```
+---
+```{r eval=T, out.width='\\textwidth'}
+plotRGB(L8_dry,r=6,g=5,b=4, scale=10000)
+```
+---
 

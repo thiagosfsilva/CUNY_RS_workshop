@@ -1,0 +1,3 @@
+TO DO:
+
+Change GEE export script to export only spectral bands.
