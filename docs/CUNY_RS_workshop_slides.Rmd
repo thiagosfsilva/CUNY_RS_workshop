@@ -7,7 +7,7 @@ output:
   xaringan::moon_reader:
 #    css: ["default", "fonts.css"]  
 #    chakra: libs/remark-latest.min.js
-    lib_dir: libs
+#    lib_dir: /libs
 #    self_contained: true
     nature:
       highlightStyle: github
@@ -384,5 +384,46 @@ Export.image.toDrive({
   description: 'L8_dry_season_2014-2017',
   scale: 30
 })
+```
+---
+# GEE data structures
+
+*Image*: a single image element. 
+
+*Collection*: A dataset comprised of several images. Let's use the Landsat 5 historical record, for example:
+
+*Feature and Feature Collection*: the equivalent of `Image` and `Collection`, for vector data.
+
+**Or, according to the GEE documentation:**
+
+"A Feature in Earth Engine is defined as a GeoJSON Feature. Specifically, a Feature is an object with a `geometry` property storing a Geometry object (or null) and a `properties` property storing a dictionary of other properties."
+---
+### Importing features
+
+Recently, GEE aded the ability to import shapefiles direclty from the Code Editor, making it simple to bring external features.
+
+On the top left portion of the Code Editor, do:
+
+- Click on the `Assets` tab;
+
+- Clik on `New` and select `Table Upload`
+
+- Select the shapefile of interest and all accessory files (`.dbf`,`.prj`,`.shx`)
+
+- Check the task progress on the `Tasks` tab
+
+- Once it is done, click om `Import into script`
+
+- Rename the variable to `iButton`
+---
+# Combining images and features
+
+In this exam pleLet extract MODIS temperature data for iButton locations.
+
+First, lets prepare our temperature collection:
+
+```{js}
+var MOD
+
 ```
 

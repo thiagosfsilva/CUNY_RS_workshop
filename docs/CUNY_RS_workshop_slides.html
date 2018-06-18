@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="author" content="Thiago Sanna Freire Silva" />
     <meta name="date" content="2018-06-18" />
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="CUNY_RS_workshop_slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="CUNY_RS_workshop_slides_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -401,6 +401,32 @@ Export.image.toDrive({
   scale: 30
 })
 ```
+---
+# GEE data structures
+
+*Image*: a single image element. 
+
+*Collection*: A dataset comprised of several images. Let's use the Landsat 5 historical record, for example:
+
+*Feature and Feature Collection*: the equivalent of `Image` and `Collection`, for vector data.
+
+**Or, according to the GEE documentation:**
+
+"A Feature in Earth Engine is defined as a GeoJSON Feature. Specifically, a Feature is an object with a `geometry` property storing a Geometry object (or null) and a `properties` property storing a dictionary of other properties."
+---
+### Importing features
+
+Recently, GEE aded the ability to import shapefiles direclty from the Code Editor, making it simple to bring external features.
+
+On the top left portion of the Code Editor, do:
+
+- Click on the `Assets` tab;
+
+- Clik on `New` and select `Table Upload`
+
+- Select the shapefile of interest and all accessory files (`.dbf`,`.prj`,`.shx`)
+
+- Check the task progress on the `Tasks` tab
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
