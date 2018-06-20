@@ -59,7 +59,7 @@ Shorter wavelenghts = more energy!
 
 We can rank electromagnetic waves by their wavelength, comprising the **Electromagnetic Spectrum**.
 
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/EM_Spectrum_Properties_edit.svg/1024px-EM_Spectrum_Properties_edit.svg.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/EM_Spectrum_Properties_edit.svg/1024px-EM_Spectrum_Properties_edit.svg.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 .tiny[Source:https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/EM_Spectrum_Properties_edit.svg/1024px-EM_Spectrum_Properties_edit.svg.png]
 ---
@@ -92,9 +92,6 @@ Everywhere!
 
 &lt;img src="http://hyperphysics.phy-astr.gsu.edu/hbase/imgmod/bbrc6b.gif" width="60%" style="display: block; margin: auto;" /&gt;
 
-
-`\(~\)`
-
 .tiny[Source: http://hyperphysics.phy-astr.gsu.edu/hbase/imgmod/bbrc6b.gif]
 
 ---
@@ -102,17 +99,11 @@ Everywhere!
 
 &lt;img src="https://bsclarified.files.wordpress.com/2011/07/colorflowchart.jpg" width="100%" style="display: block; margin: auto;" /&gt;
 
-`\(~\)`
-
-`\(~\)`
-
-`\(~\)`
-
 .tiny[Source:https://bsclarified.files.wordpress.com/2011/07/colorflowchart.jpg]
 ---
 # Main types of interactions
 
-&lt;img src="reflec.png" width="60%" style="display: block; margin: auto 0 auto auto;" /&gt;
+&lt;img src="reflec.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## The real power of remote sensing: measurements!
@@ -132,7 +123,7 @@ More than anything, a remote sensing dataset is a set of **measurements**.
 
 **Optical**
 
-&lt;img src="http://www.seos-project.eu/modules/remotesensing/images/Reflexionskurven.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="http://www.seos-project.eu/modules/remotesensing/images/Reflexionskurven.jpg" width="70%" style="display: block; margin: auto;" /&gt;
 
 .tiny[Source: http://www.seos-project.eu/modules/remotesensing/images/Reflexionskurven.jpg]
 
@@ -158,7 +149,7 @@ More than anything, a remote sensing dataset is a set of **measurements**.
 
 **Microwave**
 
-&lt;img src="scattering.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="scattering.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Reflectance: the holy grail of optical remote sensing.
@@ -237,7 +228,7 @@ For thermal and radar remote sensing, the analogs are *emissivity* ( `\(\epsilon
 
 - **Biomass**: WHRC Pantropical map
 
-- **Vegetatiob structure**: ALOS Annual Mosaics*
+- **Vegetation structure**: ALOS Annual Mosaics*
 ---
 class: inverse, center, middle
 background-image: url("https://i.imgflip.com/17j2vf.jpg")
@@ -267,7 +258,7 @@ All for free! (yeah, right.)
 
 Has Python and JavaScript APIs, but **if you want to work interactively, you need to use the online JavaScript [Code Editor](https://code.earthengine.google.com/)**
 ---
-# GEE Datasets
+# GEE Datasets and the Code Editor
 
 To find out wich datasets are available on GEE, use the dedicated Data Explorer on https://explorer.earthengine.google.com/#index.
 
@@ -275,7 +266,7 @@ You can switch between `Catalog` and `Workspace` on the top right.
 
 Or, use the search bar on the [Code Editor](https://code.earthengine.google.com/).
 
-Although very limited, the Code Editor offers some useful tools:
+Although very limited, the [Code Editor](https://code.earthengine.google.com/ offers some useful tools:
 
 - Code repository with several examples
 - Function documentation
@@ -285,7 +276,7 @@ Although very limited, the Code Editor offers some useful tools:
 
 
 ---
-# GEE main data structures
+# GEE main data constructors
 
 **`ee.Image`**: a single image element. 
 
@@ -295,7 +286,7 @@ Although very limited, the Code Editor offers some useful tools:
 
 **`ee.Feature.Collection`**: Multi-item vector data
 
-**Other**: `ee.List`, `ee.Number`, `ee.String`, etc.
+**Other**: `ee.List`, `ee.Number`, `ee.String`, `ee.Array`, etc.
 
 ---
 ## Working with images
@@ -306,7 +297,9 @@ Although very limited, the Code Editor offers some useful tools:
 ```js
 // Load a single image from the new JAXA AW3D30
 //  digital elevation model
+
 var aw3d30 = ee.Image('JAXA/ALOS/AW3D30_V1_1')
+
 Map.addLayer(aw3d30)
 ```
 **Don't forget to save your code often - there is no autosave!**
@@ -436,7 +429,7 @@ print('CLOUD_COVER: ', cloudiness)
 ---
 ## Working with collections 
 
-The first thing you'll want do with a `Collection` is filtering. There are dozens of filter functions in GEE:
+The first thing you'll want do with a `Collection` is filtering. There are many filter functions in GEE:
 
 
 ```js
@@ -628,8 +621,6 @@ Map.addLayer(fractions, {}, 'unmixed')
 
 *Map*: apply a function to every image in a collection. The equivalent of a `for` loop (or an `lapply` in `R`).
 
-*Reduce*: combine all images in a collection through a pixel-wise function.
-
 
 ```js
 var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
@@ -699,10 +690,9 @@ Map.addLayer(masked, vizParams, 'Masked')
 
 ```
 ---
+## What can we do with collections?
 
-# What can I do with collections?
-
-*Reducing*: combining images. This is one of my main uses of GEE: creating image composites!
+*Reduce*: combining images. This is one of my main uses of GEE: creating image composites!
 
 
 ```js
@@ -719,9 +709,7 @@ Map.centerObject(ROI, 15)
 ---
 ## Reusing functions: modules
 
-You can export functions from other files in your repository (or shared repositories) to reuse common custom functions.
-
-Let's take the `mask_cloud` function and save it on a separate file called `LScloudmask`. The only difference is that we substitute `var` by `exports.`:
+You can export functions from other files in your repository (or shared repositories) to reuse common custom functions. Let's take the `mask_cloud` function and save it on a separate file called `LScloudmask`. The only difference is that we substitute `var` by `exports.`:
 
 
 ```js
@@ -770,10 +758,7 @@ Map.addLayer(L8_comp,{
 
 ```
 
-
-
 ---
-
 
 ## Exercise: putting it all together
 
@@ -787,7 +772,7 @@ Map.addLayer(L8_comp,{
 
 4 - Show the first image on the Map, with a R5G4B3 color composition
 
-5 - Apply the cloud mask to the collection
+5 - Apply the cloud mask to the collection (import the module)
 
 6 - Display the first masked image
 
@@ -796,7 +781,9 @@ Map.addLayer(L8_comp,{
 8 - Display the composite image
 
 9 - Calculate NDVI from the composite image
+
 ---
+
 # Exporting data from GEE
 
 Generating different composites for wet and dry seasons
@@ -845,7 +832,7 @@ Export.image.toDrive({
 ---
 ## Working with vector data
 
-*Feature and Feature Collection*: the equivalent of `Image` and `ImageCollection`, for vector data.
+**`Feature` and `FeatureCollection`***: the equivalent of `Image` and `ImageCollection`, for vector data.
 
 **Or, according to the GEE documentation:**
 
@@ -875,20 +862,145 @@ On the top left portion of the Code Editor, do:
 
 Me and the "Carnavalers" have been working on a project to relate field measurements of temperature with remote sensing metrics. 
 
-First, lets prepare our temperature collection:
+We already imported the ibutton locations:
 
 
 ```js
-var MOD
+var ibutton = ee.FeatureCollection("users/thiagosfsilva/ibutton_locations")
+
+var ibuttonbbox = ibutton.geometry().bounds().buffer(1000)
+
+Map.addLayer(ibutton,{}, 'IButton locations')
+Map.addLayer(ibuttonbbox,{}, "Ibutton BBox")
+Map.centerObject(ibuttonbbox, 10)
 
 ```
+---
+## Combining images and features
+
+Now lets generate some brightness temperature composites from Landsat
+
+
+
+```js
+var  mod = require('users/thiagosfsilva/modules:LScloudmask')
+
+var L5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+    .filterBounds(ibuttonbbox) 
+    .filterDate('2005-01-01','2010-12-31')
+
+var L5_masked = L5.map(mask_clouds)
+
+var vizParams = {
+  min: 2730, //(0 C = 273K /0.1 = 2730)
+  max: 3230,  //(50 C = 323K / 0.1 = 3230)
+  palette: ['yellow','orange','red']
+}
+
+Map.addLayer(ee.Image(L5_masked.first()).select('B6'), vizParams, 'Masked first image')
+
+var max_temp = L5_masked.max().select('B6').clip(ibuttonbbox)
+var min_temp = L5_masked.min().select('B6').clip(ibuttonbbox)
+
+Map.addLayer(max_temp,vizParams,"Maximum Temperature 2009-2010")
+Map.addLayer(min_temp, vizParams, "Minimum Temperature 2009-2010")
+```
+---
+## Combining images and features
+
+Then we can compute some vegetation descriptors
+
+
+```js
+var getNDVI = function(image){
+  var ndvi = image.normalizedDifference(['B4','B3'])
+  return(ndvi)
+}
+
+var L5_NDVI = L5_masked.map(getNDVI)
+
+var max_ndvi = L5_NDVI.max().clip(ibuttonbbox)
+var min_ndvi = L5_NDVI.min().clip(ibuttonbbox)
+
+var ndvi_range = max_ndvi.subtract(min_ndvi)
+
+Map.addLayer(max_ndvi,{min: -0.3, max: 1, palette: ['red','green']},"Max NDVI")
+Map.addLayer(ndvi_range,{min: 0, max: 2, palette: ['red','green']}, "NDVI_range")
+
+```
+---
+## Combining images and features
+
+And why not some topographical predictors?
+
+
+```js
+var alosdem = ee.Image('JAXA/ALOS/AW3D30_V1_1').select('MED').clip(ibuttonbbox)
+
+var slope = ee.Terrain.slope(alosdem)
+
+var aspect = ee.Terrain.aspect(alosdem)
+
+Map.addLayer(slope,{min: 0, max: 5},"Slope")
+
+Map.addLayer(aspect,{min: 0, max: 360},"Aspect")
+```
+---
+## Combining images and features
+
+Now we can assemble all bands into a single image:
+
+
+```js
+var pred_set = ee.Image.cat(max_temp, min_temp,
+  max_ndvi, ndvi_range, alosdem, slope, aspect)
+  .rename(['max_temp', 'min_temp',
+  'max_ndvi', 'ndvi_range', 'alosdem', 'slope', 'aspect'])
+
+print(pred_set)
+```
+
+---
+## Combining images and features
+
+And extract all predictor values:
+
+
+```js
+
+var pred_extract = pred_set.reduceRegions({
+  collection: ibutton,
+  reducer: ee.Reducer.first(),
+  scale: 30,
+})
+
+print(pred_extract)
+
+Export.table.toDrive({
+  collection: pred_extract,
+  description:'ibutton_extraction',
+  fileFormat: 'SHP',
+  folder: 'GEE'
+})
+
+```
+---
+class: inverse, center, middle
+
+# Image Classification
+---
+class: center, middle
+
+# Thank you!
+
+### thiago.sf.silva@unesp.br
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false,
-"ratio": "4:3"
+"ratio": "16:9"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
