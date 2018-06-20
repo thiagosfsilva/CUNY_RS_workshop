@@ -1,0 +1,13 @@
+.title-slide {
+  background-image: url(cover.png);
+  background-size: cover;
+}       
+
+.remark-code, .remark-inline-code { 
+            font-family: 'Fira Code';
+}
+
+.small { font-size: 70% }
+.tiny  { font-size:50% }
+.large { font-size:120% }
+.huge  { font-size: 150% }
